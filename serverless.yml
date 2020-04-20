@@ -8,10 +8,10 @@ provider:
 
 package:
   include:
-    - ouput/**
+    - output/**
 
 functions:
   basic:
-    handler: src/index.basic
+    handler: output/Basic.handler
   event:
-    handler: src/index.event
+    handler: output/Event.handler

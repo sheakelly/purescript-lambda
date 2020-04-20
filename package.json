@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "spago build",
+    "deploy": "serverless deploy"
+  },
   "devDependencies": {
     "purescript": "^0.13.6",
     "serverless": "^1.67.3",
