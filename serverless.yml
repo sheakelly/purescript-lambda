@@ -1,0 +1,10 @@
+service: purescript-lambda
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-southeast-2
+
+functions:
+  hello:
+    handler: output/Main.basic
