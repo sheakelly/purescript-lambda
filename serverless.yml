@@ -11,5 +11,7 @@ package:
     - ouput/**
 
 functions:
-  hello:
-    handler: output/Main.basic
+  basic:
+    handler: src/index.basic
+  event:
+    handler: src/index.event
