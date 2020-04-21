@@ -10,7 +10,12 @@ import Effect.Aff.Compat (mkEffectFn1)
 import Effect.Uncurried (EffectFn1)
 import Effect.Exception (error)
 import Data.Either (Either(..))
-import Simple.JSON (class ReadForeign, read, write)
+import Simple.JSON (class ReadForeign, read, write, class WriteForeign)
+
+withEvent :: forall a b. ReadForeign a => WriteForeign b => Foreign -> (a -> b) -> Effect (Promise Foreign)
+withEvent f fn = case read f of
+  Right (r :: a) -> liftEffect $ fromAff $ pure $ write $ fn r
+  Left e -> liftEffect $ fromAff $ throwError $ error $ show e
 
 type Input
   = { id :: Number, message :: String }
@@ -18,16 +23,11 @@ type Input
 type Output
   = { text :: String }
 
-withEvent :: forall a. ReadForeign a => Foreign -> (a -> Foreign) -> Effect (Promise Foreign)
-withEvent f fn = case read f of
-  Right (r :: a) -> liftEffect $ fromAff $ pure $ fn r
-  Left e -> liftEffect $ fromAff $ throwError $ error $ show e
-
 handler' :: Foreign -> Effect (Promise Foreign)
 handler' f =
   withEvent f
     ( \(input :: Input) ->
-        write { text: "You said: " <> input.message }
+      { text: "You said: " <> input.message } :: Output
     )
 
 handler :: EffectFn1 Foreign (Promise Foreign)
