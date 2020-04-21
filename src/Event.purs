@@ -5,7 +5,6 @@ import Prelude
 import Control.Monad.Except (runExcept, throwError)
 import Effect (Effect)
 import Effect.Class (liftEffect)
-import Effect.Console (logShow)
 import Control.Promise (Promise, fromAff)
 import Foreign (F, Foreign, readNumber, readString)
 import Foreign.Index ((!))

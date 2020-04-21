@@ -15,3 +15,5 @@ functions:
     handler: output/Basic.handler
   event:
     handler: output/Event.handler
+  simpleJson:
+    handler: output/SimpleJson.handler
