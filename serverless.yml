@@ -13,7 +13,15 @@ package:
 functions:
   basic:
     handler: output/Basic.handler
+
   event:
     handler: output/Event.handler
+
   simpleJson:
     handler: output/SimpleJson.handler
+
+  s3EventSource:
+    handler: output/S3EventSource.handler
+    events:
+      - s3: lwb-test-purescript-lambda
+
