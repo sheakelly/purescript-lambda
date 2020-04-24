@@ -25,3 +25,12 @@ functions:
     events:
       - s3: lwb-test-purescript-lambda
 
+  httpPureApi:
+    handler: output/HTTPPureApi.handler
+    events:
+      - http:
+          path: /
+          method: any
+      - http:
+          path: /{any+}
+          method: any
