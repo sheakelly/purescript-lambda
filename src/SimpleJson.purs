@@ -11,6 +11,7 @@ import Effect.Uncurried (EffectFn1)
 import Effect.Exception (error)
 import Data.Either (Either(..))
 import Simple.JSON (class ReadForeign, read, write, class WriteForeign)
+import Data.Maybe (Maybe)
 
 withEvent :: forall a b. ReadForeign a => WriteForeign b => Foreign -> (a -> b) -> Effect (Promise Foreign)
 withEvent f fn = case read f of
@@ -18,7 +19,10 @@ withEvent f fn = case read f of
   Left e -> liftEffect $ fromAff $ throwError $ error $ show e
 
 type Input
-  = { id :: Number, message :: String }
+  = { id :: Number, message :: String, nested :: Maybe Nested }
+
+type Nested
+  = { value :: String }
 
 type Output
   = { text :: String }
