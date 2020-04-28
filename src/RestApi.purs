@@ -4,7 +4,6 @@ import Prelude
 import Effect.Aff (Aff, throwError)
 import Effect.Class (liftEffect)
 import Control.Promise (Promise, fromAff)
-import Control.Monad.Except (runExcept)
 import Foreign (Foreign, renderForeignError)
 import Effect.Aff.Compat (mkEffectFn1)
 import Effect.Uncurried (EffectFn1)
@@ -27,20 +26,23 @@ type APIGatewayProxyEvent
   = { path :: String, httpMethod :: String }
 
 type APIGatewayProxyResult
-  = { statusCode :: Int, body :: String }
+  = { statusCode :: Int, body :: String, isBase64Encoded :: Boolean }
 
-router :: APIGatewayProxyEvent -> String
-router { httpMethod: "GET" } = "Get method"
+okResult :: String -> APIGatewayProxyResult
+okResult body = { statusCode: 200, body, isBase64Encoded: false }
 
-router { httpMethod: "POST" } = "Post method"
-
-router { httpMethod } = "Unsupported method " <> httpMethod
+errorResult :: String -> APIGatewayProxyResult
+errorResult body = { statusCode: 500, body, isBase64Encoded: false }
 
 handler' :: APIGatewayProxyEvent -> Aff APIGatewayProxyResult
 handler' event = do
-  pure { statusCode: 500, body: response }
+  liftEffect $ log $ "event: " <> show event
+  pure result
   where
-  response = router event
+  result = case event of
+    { httpMethod: "GET" } -> okResult "Get method"
+    { httpMethod: "POST" } -> okResult "Post method"
+    { httpMethod } -> errorResult $ "Unsupported method " <> httpMethod
 
 handler :: EffectFn1 Foreign (Promise Foreign)
 handler = mkHandler handler'
