@@ -11,9 +11,10 @@ import Effect.Console (log)
 import Data.Either (Either(..))
 import Effect.Exception (error)
 import Simple.JSON (class ReadForeign, read, write, class WriteForeign)
+import Debug.Trace (spy)
 
 runHandler :: forall a b. ReadForeign a => WriteForeign b => (a -> Aff b) -> Foreign -> Aff Foreign
-runHandler h event = case read event of
+runHandler h event = case read $ spy "event" event of
   Right r -> write <$> h r
   Left e -> throwError $ error $ show $ renderForeignErrors e
   where
@@ -36,7 +37,6 @@ errorResult body = { statusCode: 500, body, isBase64Encoded: false }
 
 handler' :: APIGatewayProxyEvent -> Aff APIGatewayProxyResult
 handler' event = do
-  liftEffect $ log $ "event: " <> show event
   pure result
   where
   result = case event of

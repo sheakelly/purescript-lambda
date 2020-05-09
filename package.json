@@ -7,6 +7,9 @@
     "build": "spago build",
     "deploy": "serverless deploy"
   },
+  "dependencies": {
+    "aws-sdk": "^2.673.0"
+  },
   "devDependencies": {
     "purescript": "^0.13.6",
     "purty": "^6.1.3",
